@@ -16,5 +16,5 @@ services:
 script:
   - py.test --cov=social_network social_network/tests
 
-#after_success:
-#  - codecov
+after_success:
+  - codecov
