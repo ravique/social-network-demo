@@ -1,6 +1,8 @@
+from copy import deepcopy
+
 from django.contrib.auth.models import User
 from django.db.models import Count
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -33,15 +35,16 @@ class PostView(generics.RetrieveAPIView):
 class PostListView(generics.ListAPIView, generics.CreateAPIView):
     permission_classes = IsAuthenticated,
     queryset = Post.objects.prefetch_related('likes')
-    serializer_class = PostCreateSerializer
+    serializer_class = PostListSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def list(self, *args, **kwargs):
-        serializer_class = PostListSerializer
-        serializer = serializer_class(self.get_queryset())
-        return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        data = deepcopy(request.data)
+        data.update({'user': self.request.user.id})
+        serializer = PostCreateSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors)
 
 
 class LikeView(generics.CreateAPIView):
