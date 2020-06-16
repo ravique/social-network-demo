@@ -1,3 +1,5 @@
+[![Travis build result](https://travis-ci.com/ravique/social-network-demo.svg?branch=master)](https://travis-ci.com/ravique/social-network-demo/) [![codecov](https://codecov.io/gh/ravique/social-network-demo/branch/master/graph/badge.svg)](https://codecov.io/gh/ravique/social-network-demo)
+
 # Social Network Demo
 
 Simple Blog engine. Was made as a test task. [Technical specification](TASK.md)
